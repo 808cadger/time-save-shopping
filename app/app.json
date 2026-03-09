@@ -24,7 +24,8 @@
         "backgroundColor": "#22c55e"
       },
       "package": "com.timesaveshopping.app",
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
