@@ -5,9 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "grocerybot",
+    "scheme": "timesave",
     "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#22c55e"
     },
@@ -15,7 +16,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.timesaveshopping.app",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "GroceryBot uses your location to detect when you enter the store and guide you to items."
+        "NSLocationWhenInUseUsageDescription": "time~save~shopping uses your location to detect when you enter a store and guide you to items."
       }
     },
     "android": {
@@ -24,19 +25,25 @@
         "backgroundColor": "#22c55e"
       },
       "package": "com.timesaveshopping.app",
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ],
       "versionCode": 1
     },
-    "web": {
-      "bundler": "metro",
-      "favicon": "./assets/favicon.png"
-    },
     "plugins": [
-      "expo-router",
       "expo-location"
     ],
-    "experiments": {
-      "typedRoutes": true
+    "extra": {
+      "eas": {
+        "projectId": "9878068f-64d2-46f0-84c7-1c0b3eefcd6a"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/9878068f-64d2-46f0-84c7-1c0b3eefcd6a"
     }
   }
 }
