@@ -32,7 +32,8 @@
       "versionCode": 1
     },
     "plugins": [
-      "expo-location"
+      "expo-location",
+      "expo-asset"
     ],
     "extra": {
       "eas": {

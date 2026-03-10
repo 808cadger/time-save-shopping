@@ -9,15 +9,13 @@
         "buildType": "apk"
       },
       "distribution": "internal",
-      "channel": "preview",
       "credentialsSource": "remote"
     },
     "production": {
       "android": {
         "buildType": "app-bundle"
       },
-      "distribution": "store",
-      "channel": "production"
+      "distribution": "store"
     }
   },
   "submit": {
