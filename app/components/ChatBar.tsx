@@ -156,12 +156,11 @@ export default function ChatBar({ storeEntered = false, storeInfo = null, contex
 
   return (
     <>
-      {/* ── Floating suggestion chips ── */}
+      {/* ── Left side rail: suggestion chips (vertical) ── */}
       {chipsVisible && (
         <Animated.View style={[styles.chipsWrapper, { opacity: chipsFade }]} pointerEvents="box-none">
           <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.chipsScroll}
             keyboardShouldPersistTaps="handled"
           >
@@ -182,13 +181,20 @@ export default function ChatBar({ storeEntered = false, storeInfo = null, contex
         </Animated.View>
       )}
 
-      {/* ── Floating mini input bar ── */}
+      {/* ── Right side rail: FAB + Ask AI ── */}
       <View style={styles.floatingBar} pointerEvents="box-none">
+        {/* "Ask AI" label above FAB */}
+        {!barExpanded && (
+          <TouchableOpacity style={styles.openChatBtn} onPress={() => openChat()}>
+            <Text style={styles.openChatText}>Ask{"\n"}AI</Text>
+          </TouchableOpacity>
+        )}
+
         <Animated.View
           style={[
             styles.barContainer,
             {
-              width: barSlide.interpolate({ inputRange: [0, 1], outputRange: [52, 300] }),
+              width: barSlide.interpolate({ inputRange: [0, 1], outputRange: [52, 220] }),
             },
           ]}
         >
@@ -219,13 +225,6 @@ export default function ChatBar({ storeEntered = false, storeInfo = null, contex
             </TouchableOpacity>
           )}
         </Animated.View>
-
-        {/* "Show chat" label when collapsed */}
-        {!barExpanded && (
-          <TouchableOpacity style={styles.openChatBtn} onPress={() => openChat()}>
-            <Text style={styles.openChatText}>Ask AI →</Text>
-          </TouchableOpacity>
-        )}
       </View>
 
       {/* ── Full chat modal ── */}
@@ -309,45 +308,47 @@ export default function ChatBar({ storeEntered = false, storeInfo = null, contex
 }
 
 const styles = StyleSheet.create({
-  // ── Floating suggestion chips ──
+  // ── Left side rail: suggestion chips ──
   chipsWrapper: {
     position: "absolute",
-    bottom: 90,
-    left: 0,
-    right: 0,
+    left: 8,
+    top: "30%",
     zIndex: 100,
+    maxHeight: "45%",
     pointerEvents: "box-none",
   },
-  chipsScroll: { paddingHorizontal: 12, gap: 8, alignItems: "center" },
+  chipsScroll: { gap: 6, alignItems: "flex-start" },
   chip: {
     backgroundColor: "rgba(255,255,255,0.95)",
     borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
     borderWidth: 1,
     borderColor: "#86efac",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.12,
-    shadowRadius: 6,
+    shadowRadius: 4,
     elevation: 4,
+    maxWidth: 140,
   },
-  chipText: { fontSize: 13, color: "#15803d", fontWeight: "600" },
+  chipText: { fontSize: 11, color: "#15803d", fontWeight: "600" },
   chipDismiss: {
-    width: 30, height: 30, borderRadius: 15,
+    width: 26, height: 26, borderRadius: 13,
     backgroundColor: "rgba(255,255,255,0.9)",
     justifyContent: "center", alignItems: "center",
     borderWidth: 1, borderColor: "#e2e8f0",
+    marginTop: 2,
   },
-  chipDismissText: { fontSize: 12, color: "#94a3b8", fontWeight: "700" },
+  chipDismissText: { fontSize: 11, color: "#94a3b8", fontWeight: "700" },
 
-  // ── Floating bar (FAB + expandable input) ──
+  // ── Right side rail: FAB + Ask AI ──
   floatingBar: {
     position: "absolute",
-    bottom: 24,
-    right: 16,
+    right: 8,
+    top: "40%",
     zIndex: 101,
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     gap: 8,
     pointerEvents: "box-none",
@@ -358,7 +359,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#22c55e",
     overflow: "hidden",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 8,
     elevation: 8,
@@ -379,7 +380,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14, gap: 8,
   },
   barTextInput: {
-    flex: 1, fontSize: 14, color: "#fff",
+    flex: 1, fontSize: 13, color: "#fff",
     paddingVertical: 4,
   },
   barSend: {
@@ -390,19 +391,18 @@ const styles = StyleSheet.create({
   barSendOff: { opacity: 0.4 },
   barSendText: { color: "#fff", fontSize: 18, fontWeight: "700" },
   openChatBtn: {
-    backgroundColor: "rgba(255,255,255,0.92)",
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderWidth: 1,
-    borderColor: "#86efac",
+    backgroundColor: "#22c55e",
+    borderRadius: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOffset: { width: -2, height: 2 },
+    shadowOpacity: 0.15,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 4,
   },
-  openChatText: { fontSize: 12, color: "#15803d", fontWeight: "700" },
+  openChatText: { fontSize: 11, color: "#fff", fontWeight: "700", textAlign: "center", lineHeight: 15 },
 
   // ── Full modal ──
   modal: { flex: 1, backgroundColor: "#f8fafc" },
