@@ -24,6 +24,7 @@ interface Props {
   storeEntered?: boolean;
   storeInfo?: StoreInfo | null;
   contextSuggestions?: string[];   // page-specific suggestions injected by parent
+  placeholder?: string;
 }
 
 const DEFAULT_SUGGESTIONS = [
@@ -34,7 +35,7 @@ const DEFAULT_SUGGESTIONS = [
   "Show store map 🏪",
 ];
 
-export default function ChatBar({ storeEntered = false, storeInfo = null, contextSuggestions }: Props) {
+export default function ChatBar({ storeEntered = false, storeInfo = null, contextSuggestions, placeholder }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [barInput, setBarInput] = useState("");
   const [chatInput, setChatInput] = useState("");
