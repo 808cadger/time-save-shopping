@@ -24,3 +24,4 @@ app/.metro-cache/
 # OS
 .DS_Store
 Thumbs.db
+android/
