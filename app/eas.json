@@ -5,11 +5,11 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "buildType": "apk"
       },
       "distribution": "internal",
-      "channel": "preview"
+      "channel": "preview",
+      "credentialsSource": "remote"
     },
     "production": {
       "android": {
