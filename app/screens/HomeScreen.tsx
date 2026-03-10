@@ -3,6 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal,
   FlatList, TextInput, Platform, ActivityIndicator,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { identifyStore, getStoreChains, StoreInfo } from "../services/api";
@@ -29,6 +30,7 @@ const QUICK_ACTIONS = [
 ];
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
   const [storeEntered, setStoreEntered] = useState(false);
   const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
   const [storeLoading, setStoreLoading] = useState(false);
@@ -98,7 +100,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Hero */}
-        <View style={styles.hero}>
+        <View style={[styles.hero, { paddingTop: insets.top + 12 }]}>
           <Text style={styles.heroIcon}>🛒</Text>
           <Text style={styles.heroTitle}>time~save~shopping</Text>
           <Text style={styles.heroSub}>Shop smarter. Save time.</Text>
@@ -213,12 +215,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f8fafc" },
   scroll: { paddingBottom: 8 },
   hero: {
-    alignItems: "center", paddingTop: 48, paddingBottom: 24,
+    alignItems: "center", paddingBottom: 16,
     backgroundColor: "#22c55e", paddingHorizontal: 24,
   },
-  heroIcon: { fontSize: 48, marginBottom: 8 },
-  heroTitle: { fontSize: 26, fontWeight: "800", color: "#fff", letterSpacing: 1, marginBottom: 4 },
-  heroSub: { fontSize: 15, color: "rgba(255,255,255,0.85)", marginBottom: 10 },
+  heroIcon: { fontSize: 36, marginBottom: 4 },
+  heroTitle: { fontSize: 21, fontWeight: "800", color: "#fff", letterSpacing: 1, marginBottom: 2 },
+  heroSub: { fontSize: 13, color: "rgba(255,255,255,0.85)", marginBottom: 8 },
   modeChip: {
     backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 20,
     paddingHorizontal: 14, paddingVertical: 5,
@@ -233,38 +235,38 @@ const styles = StyleSheet.create({
   },
   statusActive: { backgroundColor: "#f0fdf4", borderWidth: 1.5, borderColor: "#86efac" },
   statusIdle: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#e2e8f0" },
-  statusIcon: { fontSize: 28 },
-  statusTitle: { fontSize: 15, fontWeight: "700", color: "#1e293b" },
-  statusSub: { fontSize: 12, color: "#64748b", marginTop: 2 },
+  statusIcon: { fontSize: 24 },
+  statusTitle: { fontSize: 13, fontWeight: "700", color: "#1e293b" },
+  statusSub: { fontSize: 11, color: "#64748b", marginTop: 1 },
   demoBtn: {
-    marginHorizontal: 16, marginTop: 8,
-    paddingVertical: 10, paddingHorizontal: 16,
+    marginHorizontal: 16, marginTop: 6,
+    paddingVertical: 8, paddingHorizontal: 14,
     backgroundColor: "#f1f5f9", borderRadius: 10,
     borderWidth: 1, borderColor: "#e2e8f0", alignItems: "center",
   },
-  demoBtnText: { fontSize: 12, color: "#64748b" },
+  demoBtnText: { fontSize: 11, color: "#64748b" },
   sectionTitle: {
-    fontSize: 17, fontWeight: "700", color: "#1e293b",
-    marginHorizontal: 16, marginTop: 20, marginBottom: 10,
+    fontSize: 14, fontWeight: "700", color: "#1e293b",
+    marginHorizontal: 16, marginTop: 14, marginBottom: 8,
   },
   actions: { flexDirection: "row", flexWrap: "wrap", paddingHorizontal: 12, gap: 8 },
   actionCard: {
-    width: "47%", backgroundColor: "#fff", borderRadius: 14, padding: 16,
+    width: "47%", backgroundColor: "#fff", borderRadius: 12, padding: 12,
     alignItems: "center", borderWidth: 1, borderColor: "#e2e8f0",
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04, shadowRadius: 4, elevation: 2,
   },
-  actionIcon: { fontSize: 26, marginBottom: 8 },
-  actionLabel: { fontSize: 13, fontWeight: "600", color: "#334155", textAlign: "center" },
+  actionIcon: { fontSize: 22, marginBottom: 6 },
+  actionLabel: { fontSize: 12, fontWeight: "600", color: "#334155", textAlign: "center" },
   chainsRow: { paddingHorizontal: 16 },
   chainChip: {
-    flexDirection: "row", alignItems: "center", gap: 6,
+    flexDirection: "row", alignItems: "center", gap: 5,
     backgroundColor: "#fff", borderRadius: 20, borderWidth: 1, borderColor: "#e2e8f0",
-    paddingHorizontal: 12, paddingVertical: 8, marginRight: 8,
+    paddingHorizontal: 10, paddingVertical: 6, marginRight: 8,
   },
   chainChipActive: { borderColor: "#22c55e", backgroundColor: "#f0fdf4" },
-  chainEmoji: { fontSize: 18 },
-  chainName: { fontSize: 13, color: "#334155", fontWeight: "500" },
+  chainEmoji: { fontSize: 15 },
+  chainName: { fontSize: 12, color: "#334155", fontWeight: "500" },
   selectorModal: { flex: 1, backgroundColor: "#f8fafc" },
   selectorHeader: {
     flexDirection: "row", justifyContent: "space-between", alignItems: "center",
