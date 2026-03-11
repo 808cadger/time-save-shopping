@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StatusBar } from "expo-status-bar";
-import { Platform, Text, View } from "react-native";
+import { Platform, Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import HomeScreen from "./screens/HomeScreen";
 import ShoppingListScreen from "./screens/ShoppingListScreen";
@@ -12,8 +13,14 @@ import OnboardingScreen, { PREFS_KEY, UserPreferences } from "./screens/Onboardi
 
 const Tab = createBottomTabNavigator();
 
-function TabIcon({ icon, focused }: { icon: string; focused: boolean }) {
-  return <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.45 }}>{icon}</Text>;
+function TabIcon({ name, focused }: { name: React.ComponentProps<typeof Ionicons>["name"]; focused: boolean }) {
+  return (
+    <Ionicons
+      name={focused ? name : (`${name}-outline` as React.ComponentProps<typeof Ionicons>["name"])}
+      size={22}
+      color={focused ? "#22c55e" : "#94a3b8"}
+    />
+  );
 }
 
 export default function App() {
@@ -52,18 +59,24 @@ export default function App() {
             tabBarActiveTintColor: "#22c55e",
             tabBarInactiveTintColor: "#94a3b8",
             tabBarStyle: {
-              borderTopColor: "#e2e8f0",
-              paddingBottom: Platform.OS === "ios" ? 20 : 8,
-              paddingTop: 8,
-              height: Platform.OS === "ios" ? 82 : 62,
+              position: "absolute",
+              bottom: Platform.OS === "ios" ? 28 : 16,
+              left: 24,
+              right: 24,
+              height: 64,
+              borderRadius: 32,
               backgroundColor: "#fff",
+              borderTopWidth: 0,
+              paddingBottom: 0,
+              paddingTop: 0,
               shadowColor: "#000",
-              shadowOffset: { width: 0, height: -2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 6,
-              elevation: 8,
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.12,
+              shadowRadius: 24,
+              elevation: 16,
             },
-            tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginTop: 2 },
+            tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginBottom: 6 },
+            tabBarIconStyle: { marginTop: 6 },
           }}
         >
           <Tab.Screen
@@ -71,7 +84,7 @@ export default function App() {
             component={HomeScreen}
             options={{
               tabBarLabel: "Home",
-              tabBarIcon: ({ focused }) => <TabIcon icon="🏠" focused={focused} />,
+              tabBarIcon: ({ focused }) => <TabIcon name="home" focused={focused} />,
             }}
           />
           <Tab.Screen
@@ -79,7 +92,7 @@ export default function App() {
             component={ShoppingListScreen}
             options={{
               tabBarLabel: "My List",
-              tabBarIcon: ({ focused }) => <TabIcon icon="📝" focused={focused} />,
+              tabBarIcon: ({ focused }) => <TabIcon name="list" focused={focused} />,
             }}
           />
           <Tab.Screen
@@ -87,7 +100,7 @@ export default function App() {
             component={StoreMapScreen}
             options={{
               tabBarLabel: "Map",
-              tabBarIcon: ({ focused }) => <TabIcon icon="🏪" focused={focused} />,
+              tabBarIcon: ({ focused }) => <TabIcon name="map" focused={focused} />,
             }}
           />
         </Tab.Navigator>

@@ -1,6 +1,8 @@
 # Environment — never commit API keys
 backend/.env
-*.env
+.env
+.env.*
+!.env.example
 
 # Python
 __pycache__/
@@ -21,7 +23,17 @@ app/dist/
 app/.metro-cache/
 *.log
 
+# Android build outputs & local config
+app/android/build/
+app/android/.gradle/
+app/android/app/build/
+app/android/.cxx/
+app/android/local.properties
+
+# Export artifacts
+android-export/
+
 # OS
 .DS_Store
 Thumbs.db
-android/
+app/android/app/debug.keystore

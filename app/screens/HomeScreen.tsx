@@ -8,7 +8,7 @@ import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { identifyStore, getStoreChains, StoreInfo } from "../services/api";
 import StoreIdentityCard from "../components/StoreIdentityCard";
-import ChatBar from "../components/ChatBar";
+import ChatBar, { ChatBarRef } from "../components/ChatBar";
 import { PREFS_KEY, UserPreferences } from "./OnboardingScreen";
 
 // ── Store coordinates — update to your actual store ──
@@ -37,6 +37,7 @@ export default function HomeScreen() {
   const [showStoreSelector, setShowStoreSelector] = useState(false);
   const [chains, setChains] = useState<Record<string, StoreInfo>>({});
   const [prefs, setPrefs] = useState<UserPreferences | null>(null);
+  const chatBarRef = useRef<ChatBarRef>(null);
 
   useEffect(() => {
     loadPrefsAndLocation();
@@ -101,7 +102,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Hero */}
         <View style={[styles.hero, { paddingTop: insets.top + 12 }]}>
-          <Text style={styles.heroIcon}>🛒</Text>
+          <Text style={styles.heroIcon}>$</Text>
           <Text style={styles.heroTitle}>time~save~shopping</Text>
           <Text style={styles.heroSub}>Shop smarter. Save time.</Text>
           {prefs && (
@@ -146,7 +147,12 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>Quick Actions</Text>
         <View style={styles.actions}>
           {QUICK_ACTIONS.map((a) => (
-            <TouchableOpacity key={a.label} style={styles.actionCard}>
+            <TouchableOpacity
+              key={a.label}
+              style={styles.actionCard}
+              onPress={() => chatBarRef.current?.openWithQuery(a.query)}
+              activeOpacity={0.75}
+            >
               <Text style={styles.actionIcon}>{a.icon}</Text>
               <Text style={styles.actionLabel}>{a.label}</Text>
             </TouchableOpacity>
@@ -206,7 +212,7 @@ export default function HomeScreen() {
       </Modal>
 
       {/* Persistent chat bar at the bottom */}
-      <ChatBar storeEntered={storeEntered} storeInfo={storeInfo} />
+      <ChatBar ref={chatBarRef} storeEntered={storeEntered} storeInfo={storeInfo} />
     </View>
   );
 }
@@ -218,7 +224,10 @@ const styles = StyleSheet.create({
     alignItems: "center", paddingBottom: 16,
     backgroundColor: "#22c55e", paddingHorizontal: 24,
   },
-  heroIcon: { fontSize: 36, marginBottom: 4 },
+  heroIcon: {
+    fontSize: 44, marginBottom: 4, color: "rgba(255,255,255,0.92)",
+    fontWeight: "200", letterSpacing: -2, fontStyle: "italic",
+  },
   heroTitle: { fontSize: 21, fontWeight: "800", color: "#fff", letterSpacing: 1, marginBottom: 2 },
   heroSub: { fontSize: 13, color: "rgba(255,255,255,0.85)", marginBottom: 8 },
   modeChip: {
