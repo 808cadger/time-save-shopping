@@ -128,3 +128,4 @@ backend/
 ---
 
 Built with [Claude claude-opus-4-6](https://anthropic.com) · React Native (Expo) · FastAPI
+
