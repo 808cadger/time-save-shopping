@@ -76,22 +76,37 @@ export async function* streamChat(
 }
 
 export async function identifyStore(lat: number, lng: number): Promise<StoreInfo | null> {
-  const res = await fetch(`${API_BASE_URL}/api/store/identify`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ lat, lng }),
-  });
-  const data = await res.json();
-  return data.found ? data.store : null;
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/store/identify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lat, lng }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.found ? data.store : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getStoreChains(): Promise<Record<string, StoreInfo>> {
-  const res = await fetch(`${API_BASE_URL}/api/store/chains`);
-  const data = await res.json();
-  return data.chains;
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/store/chains`);
+    if (!res.ok) return {};
+    const data = await res.json();
+    return data.chains ?? {};
+  } catch {
+    return {};
+  }
 }
 
 export async function getInventory() {
-  const res = await fetch(`${API_BASE_URL}/api/store/inventory`);
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/store/inventory`);
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }

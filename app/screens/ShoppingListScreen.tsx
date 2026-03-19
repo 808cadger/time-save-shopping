@@ -4,6 +4,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatBar from "../components/ChatBar";
+import { StoreInfo } from "../services/api";
 
 interface ListItem {
   id: string;
@@ -12,12 +13,19 @@ interface ListItem {
 }
 
 const STORAGE_KEY = "@timesave_list";
+const STORE_KEY = "@timesave_store";
 
 export default function ShoppingListScreen() {
   const [items, setItems] = useState<ListItem[]>([]);
+  const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
   const [newItem, setNewItem] = useState("");
 
-  useEffect(() => { loadList(); }, []);
+  useEffect(() => {
+    loadList();
+    AsyncStorage.getItem(STORE_KEY).then((json) => {
+      if (json) setStoreInfo(JSON.parse(json));
+    }).catch(() => {});
+  }, []);
 
   async function loadList() {
     try {
@@ -126,6 +134,7 @@ export default function ShoppingListScreen() {
 
       {/* Persistent chat bar */}
       <ChatBar
+        storeInfo={storeInfo}
         placeholder={items.length > 0
           ? `Route ${unchecked.length} items — ask for directions`
           : "Ask the assistant to help build your list"}

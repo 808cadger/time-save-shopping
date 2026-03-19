@@ -40,8 +40,10 @@ export default function HomeScreen() {
   const chatBarRef = useRef<ChatBarRef>(null);
 
   useEffect(() => {
-    loadPrefsAndLocation();
+    let subscription: Location.LocationSubscription | undefined;
+    loadPrefsAndLocation().then((sub) => { subscription = sub; });
     loadChains();
+    return () => { subscription?.remove(); };
   }, []);
 
   async function loadPrefsAndLocation() {
@@ -49,7 +51,7 @@ export default function HomeScreen() {
       const json = await AsyncStorage.getItem(PREFS_KEY);
       if (json) setPrefs(JSON.parse(json));
     } catch {}
-    startLocationTracking();
+    return startLocationTracking();
   }
 
   async function loadChains() {
@@ -68,10 +70,11 @@ export default function HomeScreen() {
       handleLocation(loc.coords.latitude, loc.coords.longitude);
     } catch {}
 
-    Location.watchPositionAsync(
+    const subscription = await Location.watchPositionAsync(
       { accuracy: Location.Accuracy.Balanced, distanceInterval: 20 },
       (loc) => handleLocation(loc.coords.latitude, loc.coords.longitude)
     );
+    return subscription;
   }
 
   async function handleLocation(lat: number, lng: number) {
@@ -83,16 +86,23 @@ export default function HomeScreen() {
       setStoreLoading(true);
       try {
         const info = await identifyStore(lat, lng);
-        if (info) setStoreInfo(info);
+        if (info) {
+          setStoreInfo(info);
+          AsyncStorage.setItem(STORE_KEY, JSON.stringify(info)).catch(() => {});
+        }
       } catch {}
       setStoreLoading(false);
     }
   }
 
+  const STORE_KEY = "@timesave_store";
+
   function selectStore(key: string) {
     const chain = chains[key];
     if (chain) {
-      setStoreInfo({ ...chain, chain_key: key });
+      const info = { ...chain, chain_key: key };
+      setStoreInfo(info);
+      AsyncStorage.setItem(STORE_KEY, JSON.stringify(info)).catch(() => {});
     }
     setShowStoreSelector(false);
   }

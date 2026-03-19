@@ -20,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+client = anthropic.AsyncAnthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 GOOGLE_PLACES_KEY = os.environ.get("GOOGLE_PLACES_API_KEY", "")
 
 # ── Store chain registry ───────────────────────────────────────────────────────
@@ -502,18 +502,18 @@ async def stream_chat(
     system = build_system_prompt(store_info)
     api_messages = list(messages)
     all_tools = TOOLS + WEB_TOOLS
+    local_tool_names = {tool["name"] for tool in TOOLS}
 
     if store_entered and len(messages) == 1:
         api_messages[0]["content"] = "A customer just walked into the store. " + api_messages[0]["content"]
 
     while True:
-        response = client.messages.create(
+        response = await client.messages.create(
             model="claude-opus-4-6",
             max_tokens=2048,
             system=system,
             tools=all_tools,
             messages=api_messages,
-            thinking={"type": "adaptive"},
         )
 
         for block in response.content:
@@ -529,6 +529,9 @@ async def stream_chat(
 
         tool_results = []
         for block in response.content:
+            if block.type == "tool_use" and block.name not in local_tool_names:
+                # Built-in server-side tools (e.g. web_search) are handled by the API
+                continue
             if block.type == "tool_use":
                 tool_label = {
                     "find_item_in_store":        "🔍 Checking store inventory...",

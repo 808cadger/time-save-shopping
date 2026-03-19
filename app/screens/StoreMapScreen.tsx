@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator,
 } from "react-native";
-import { getInventory } from "../services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getInventory, StoreInfo } from "../services/api";
 import ChatBar from "../components/ChatBar";
 
 interface AisleInfo { aisle: string; section: string; items: string[]; }
+
+const STORE_KEY = "@timesave_store";
 
 const AISLE_COLORS: Record<string, string> = {
   "2": "#dcfce7", "3": "#fee2e2", "4": "#fde8d8", "5": "#dbeafe",
@@ -22,8 +25,14 @@ export default function StoreMapScreen() {
   const [aisles, setAisles] = useState<AisleInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAisle, setSelectedAisle] = useState<string | null>(null);
+  const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
 
-  useEffect(() => { loadMap(); }, []);
+  useEffect(() => {
+    loadMap();
+    AsyncStorage.getItem(STORE_KEY).then((json) => {
+      if (json) setStoreInfo(JSON.parse(json));
+    }).catch(() => {});
+  }, []);
 
   async function loadMap() {
     try {
@@ -117,7 +126,7 @@ export default function StoreMapScreen() {
       </ScrollView>
 
       {/* Persistent chat bar */}
-      <ChatBar placeholder="Ask about an aisle or item..." />
+      <ChatBar storeInfo={storeInfo} placeholder="Ask about an aisle or item..." />
     </View>
   );
 }
