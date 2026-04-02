@@ -1,17 +1,6 @@
 /**
  * ChatBar — full-screen AI assistant with a draggable, animated FAB.
- *
- * Modern features:
- *  • Draggable FAB with pulsing glow rings
- *  • True full-screen chat (covers tab bar + status bar)
- *  • Slide + fade-in animation per message
- *  • Animated 3-dot typing indicator
- *  • Message timestamps
- *  • Unread badge on FAB
- *  • Scroll-to-bottom button
- *  • Context-aware suggestion chips
- *  • Animated send button
- *  • Haptic feedback simulation via spring animations
+ * Aloha from Pearl City! — Claude design system applied throughout.
  */
 import React, {
   useState, useRef, useEffect, useCallback, forwardRef, useImperativeHandle,
@@ -25,6 +14,22 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ChatMessage, StoreInfo, streamChat } from "../services/api";
+
+// Claude design tokens
+const PARCHMENT    = "#f5f4ed";
+const IVORY        = "#faf9f5";
+const NEAR_BLACK   = "#141413";
+const DARK_SURFACE = "#30302e";
+const TERRACOTTA   = "#c96442";
+const CORAL        = "#d97757";
+const OLIVE_GRAY   = "#5e5d59";
+const STONE_GRAY   = "#87867f";
+const BORDER_CREAM = "#f0eee6";
+const BORDER_WARM  = "#e8e6dc";
+const RING_WARM    = "#d1cfc5";
+const WARM_SAND    = "#e8e6dc";
+const CHARCOAL_WARM = "#4d4c48";
+const WARM_SILVER  = "#b0aea5";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 
@@ -68,7 +73,7 @@ const SUGGESTIONS_IN_STORE = [
   { icon: "🔄", text: "Check nearby stores for stock" },
 ];
 
-// Animated typing dots component
+// Animated typing dots — warm toned
 function TypingDots() {
   const dots = [
     useRef(new Animated.Value(0)).current,
@@ -98,8 +103,8 @@ function TypingDots() {
   );
 }
 const td = StyleSheet.create({
-  row: { flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 4 },
-  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "#94a3b8" },
+  row: { flexDirection: "row", alignItems: "center", gap: 5, paddingVertical: 6, paddingHorizontal: 4 },
+  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: RING_WARM },
 });
 
 const ChatBarInner = forwardRef<ChatBarRef, Props>(
@@ -158,13 +163,13 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
       if (storeEntered && !isOpen) {
         const pulse = Animated.loop(
           Animated.sequence([
-            Animated.timing(pulseAnim, { toValue: 1.1, duration: 800, useNativeDriver: true }),
-            Animated.timing(pulseAnim, { toValue: 1.0, duration: 800, useNativeDriver: true }),
+            Animated.timing(pulseAnim, { toValue: 1.08, duration: 900, useNativeDriver: true }),
+            Animated.timing(pulseAnim, { toValue: 1.0, duration: 900, useNativeDriver: true }),
           ])
         );
         const ring = Animated.loop(
           Animated.sequence([
-            Animated.timing(ringAnim, { toValue: 1, duration: 1200, useNativeDriver: true }),
+            Animated.timing(ringAnim, { toValue: 1, duration: 1400, useNativeDriver: true }),
             Animated.delay(600),
             Animated.timing(ringAnim, { toValue: 0, duration: 0, useNativeDriver: true }),
           ])
@@ -184,7 +189,6 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
       }
     }, [storeEntered]);
 
-    // Expose openWithQuery to parent via ref
     useImperativeHandle(ref, () => ({
       openWithQuery: (query: string) => openChat(query),
     }));
@@ -200,7 +204,6 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
       if (!text.trim() || isLoading) return;
       setChatInput("");
 
-      // Animate send button
       Animated.sequence([
         Animated.timing(sendScale, { toValue: 0.85, duration: 80, useNativeDriver: true }),
         Animated.spring(sendScale, { toValue: 1, useNativeDriver: true, friction: 4 }),
@@ -323,7 +326,7 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
                     </View>
                     {link.has_online_order && (
                       <View style={styles.orderBtnArrowWrapper}>
-                        <Ionicons name="arrow-forward" size={14} color="#fff" />
+                        <Ionicons name="arrow-forward" size={14} color={IVORY} />
                       </View>
                     )}
                   </TouchableOpacity>
@@ -338,16 +341,15 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
     const suggestions = storeEntered ? SUGGESTIONS_IN_STORE : SUGGESTIONS_DEFAULT;
 
     const ringScale = ringAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [1, 1.6, 2.0] });
-    const ringOpacity = ringAnim.interpolate({ inputRange: [0, 0.3, 1], outputRange: [0.6, 0.3, 0] });
+    const ringOpacity = ringAnim.interpolate({ inputRange: [0, 0.3, 1], outputRange: [0.5, 0.25, 0] });
 
     return (
       <>
-        {/* ── Draggable FAB ── */}
+        {/* ── Draggable FAB — Terracotta ── */}
         <Animated.View
           style={[styles.fabWrapper, { left: fabPos.x, top: fabPos.y }]}
           {...panResponder.panHandlers}
         >
-          {/* Pulse ring (visible when in store) */}
           {storeEntered && !isOpen && (
             <Animated.View
               style={[
@@ -359,7 +361,7 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
           )}
           <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
             <View style={[styles.fab, storeEntered && styles.fabActive]}>
-              <Ionicons name="sparkles" size={27} color="#fff" />
+              <Ionicons name="sparkles" size={27} color={IVORY} />
               {storeEntered && <View style={styles.fabPulseDot} />}
             </View>
           </Animated.View>
@@ -378,16 +380,16 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
           statusBarTranslucent
           onRequestClose={() => setIsOpen(false)}
         >
-          <StatusBar barStyle="light-content" backgroundColor="#15803d" />
+          <StatusBar barStyle="light-content" backgroundColor={DARK_SURFACE} />
           <KeyboardAvoidingView
             style={styles.modal}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            {/* Header */}
+            {/* Header — Dark Surface */}
             <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
               <View style={styles.headerLeft}>
                 <View style={styles.headerAvatar}>
-                  <Ionicons name="sparkles" size={22} color="#fff" />
+                  <Ionicons name="sparkles" size={22} color={IVORY} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.headerTitle}>time~save~shopping</Text>
@@ -402,15 +404,12 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
               </View>
               <View style={styles.headerRight}>
                 {messages.length > 0 && (
-                  <TouchableOpacity
-                    style={styles.clearBtn}
-                    onPress={() => setMessages([])}
-                  >
-                    <Ionicons name="trash-outline" size={18} color="rgba(255,255,255,0.8)" />
+                  <TouchableOpacity style={styles.clearBtn} onPress={() => setMessages([])}>
+                    <Ionicons name="trash-outline" size={18} color={WARM_SILVER} />
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity style={styles.closeBtn} onPress={() => setIsOpen(false)}>
-                  <Ionicons name="close" size={22} color="#fff" />
+                  <Ionicons name="close" size={22} color={IVORY} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -418,7 +417,7 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
             {/* Tool-use banner */}
             {toolLabel && (
               <View style={styles.toolBanner}>
-                <ActivityIndicator size="small" color="#22c55e" />
+                <ActivityIndicator size="small" color={TERRACOTTA} />
                 <Text style={styles.toolBannerText}>{toolLabel}</Text>
               </View>
             )}
@@ -457,21 +456,17 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
                       </Text>
                     </View>
                   )}
-                  <ScrollView
-                    horizontal={false}
-                    showsVerticalScrollIndicator={false}
-                    style={styles.suggestionsScroll}
-                  >
+                  <ScrollView horizontal={false} showsVerticalScrollIndicator={false} style={styles.suggestionsScroll}>
                     {suggestions.map((s) => (
                       <TouchableOpacity
                         key={s.text}
                         style={styles.suggChip}
                         onPress={() => sendMessage(s.text)}
-                        activeOpacity={0.7}
+                        activeOpacity={0.75}
                       >
                         <Text style={styles.suggIcon}>{s.icon}</Text>
                         <Text style={styles.suggText}>{s.text}</Text>
-                        <Ionicons name="arrow-forward-circle" size={18} color="#22c55e" />
+                        <Ionicons name="arrow-forward-circle" size={18} color={TERRACOTTA} />
                       </TouchableOpacity>
                     ))}
                   </ScrollView>
@@ -485,11 +480,11 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
                 style={styles.scrollBtn}
                 onPress={() => flatListRef.current?.scrollToEnd({ animated: true })}
               >
-                <Ionicons name="chevron-down" size={20} color="#fff" />
+                <Ionicons name="chevron-down" size={20} color={IVORY} />
               </TouchableOpacity>
             )}
 
-            {/* Input bar */}
+            {/* Input bar — Ivory surface */}
             <View style={[styles.inputBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
               <TextInput
                 ref={inputRef}
@@ -497,7 +492,7 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
                 value={chatInput}
                 onChangeText={setChatInput}
                 placeholder={placeholder ?? "Ask about any item..."}
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor={RING_WARM}
                 multiline
                 maxLength={500}
                 returnKeyType="send"
@@ -516,8 +511,8 @@ const ChatBarInner = forwardRef<ChatBarRef, Props>(
                   activeOpacity={0.8}
                 >
                   {isLoading
-                    ? <ActivityIndicator size="small" color="#fff" />
-                    : <Ionicons name="arrow-up" size={22} color="#fff" />
+                    ? <ActivityIndicator size="small" color={IVORY} />
+                    : <Ionicons name="arrow-up" size={22} color={IVORY} />
                   }
                 </TouchableOpacity>
               </Animated.View>
@@ -533,7 +528,7 @@ ChatBarInner.displayName = "ChatBar";
 export default ChatBarInner;
 
 const styles = StyleSheet.create({
-  // ── FAB ──
+  // ── FAB — Terracotta ──
   fabWrapper: {
     position: "absolute",
     zIndex: 300,
@@ -547,161 +542,150 @@ const styles = StyleSheet.create({
     width: FAB_SIZE,
     height: FAB_SIZE,
     borderRadius: FAB_SIZE / 2,
-    borderWidth: 2.5,
-    borderColor: "#22c55e",
+    borderWidth: 2,
+    borderColor: TERRACOTTA,
   },
   fab: {
     width: FAB_SIZE,
     height: FAB_SIZE,
     borderRadius: FAB_SIZE / 2,
-    backgroundColor: "#22c55e",
+    backgroundColor: TERRACOTTA,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#22c55e",
+    shadowColor: NEAR_BLACK,
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.25,
     shadowRadius: 16,
     elevation: 14,
   },
-  fabActive: { backgroundColor: "#15803d" },
+  fabActive: { backgroundColor: "#b05538" },
   fabPulseDot: {
     position: "absolute",
-    top: 9,
-    right: 9,
-    width: 11,
-    height: 11,
+    top: 9, right: 9,
+    width: 11, height: 11,
     borderRadius: 6,
-    backgroundColor: "#f97316",
+    backgroundColor: CORAL,
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: IVORY,
   },
   unreadBadge: {
     position: "absolute",
-    top: -4,
-    right: -4,
-    minWidth: 20,
-    height: 20,
+    top: -4, right: -4,
+    minWidth: 20, height: 20,
     borderRadius: 10,
-    backgroundColor: "#ef4444",
+    backgroundColor: NEAR_BLACK,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#fff",
+    borderColor: IVORY,
     paddingHorizontal: 3,
   },
-  unreadText: { color: "#fff", fontSize: 10, fontWeight: "800" },
+  unreadText: { color: IVORY, fontSize: 10, fontWeight: "800" },
 
   // ── Modal ──
-  modal: { flex: 1, backgroundColor: "#f8fafc" },
+  modal: { flex: 1, backgroundColor: PARCHMENT },
 
-  // ── Header ──
+  // ── Header — Dark Surface ──
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#15803d",
+    backgroundColor: DARK_SURFACE,
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
   headerLeft: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1 },
   headerAvatar: {
     width: 40, height: 40, borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(255,255,255,0.1)",
     justifyContent: "center", alignItems: "center",
   },
-  headerTitle: { color: "#fff", fontSize: 16, fontWeight: "800", letterSpacing: 0.3 },
-  headerSub: { color: "rgba(255,255,255,0.8)", fontSize: 12, marginTop: 1 },
+  headerTitle: { color: IVORY, fontSize: 16, fontWeight: "600", letterSpacing: 0.2 },
+  headerSub: { color: WARM_SILVER, fontSize: 12, marginTop: 1 },
   headerRight: { flexDirection: "row", alignItems: "center", gap: 8 },
   clearBtn: {
     width: 36, height: 36, borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: "rgba(255,255,255,0.08)",
     justifyContent: "center", alignItems: "center",
   },
   closeBtn: {
     width: 36, height: 36, borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(255,255,255,0.12)",
     justifyContent: "center", alignItems: "center",
   },
 
-  // ── Tool banner ──
+  // ── Tool banner — warm ──
   toolBanner: {
     flexDirection: "row", alignItems: "center", gap: 10,
-    backgroundColor: "#f0fdf4",
-    borderBottomWidth: 1, borderBottomColor: "#bbf7d0",
+    backgroundColor: WARM_SAND,
+    borderBottomWidth: 1, borderBottomColor: BORDER_WARM,
     paddingHorizontal: 16, paddingVertical: 10,
   },
-  toolBannerText: { color: "#15803d", fontSize: 13, fontStyle: "italic", flex: 1 },
+  toolBannerText: { color: CHARCOAL_WARM, fontSize: 13, fontStyle: "italic", flex: 1 },
 
   // ── Messages ──
   msgList: { padding: 16, paddingBottom: 8 },
   msgListEmpty: { flex: 1 },
-  msgRow: {
-    flexDirection: "row",
-    marginBottom: 16,
-    alignItems: "flex-end",
-  },
+  msgRow: { flexDirection: "row", marginBottom: 16, alignItems: "flex-end" },
   msgRowUser: { justifyContent: "flex-end" },
   msgRowBot: { justifyContent: "flex-start" },
   botAvatar: {
     width: 34, height: 34, borderRadius: 17,
-    backgroundColor: "#dcfce7",
+    backgroundColor: WARM_SAND,
     justifyContent: "center", alignItems: "center",
     marginRight: 8,
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
   },
   botAvatarText: { fontSize: 17 },
   bubbleCol: { maxWidth: "80%", gap: 4 },
   bubbleColUser: { alignItems: "flex-end" },
-  bubble: {
-    borderRadius: 20,
-    paddingHorizontal: 15, paddingVertical: 11,
-  },
-  bubbleUser: {
-    backgroundColor: "#22c55e",
-    borderBottomRightRadius: 5,
-  },
+  bubble: { borderRadius: 20, paddingHorizontal: 15, paddingVertical: 11 },
+  bubbleUser: { backgroundColor: TERRACOTTA, borderBottomRightRadius: 5 },
   bubbleBot: {
-    backgroundColor: "#fff",
+    backgroundColor: IVORY,
     borderBottomLeftRadius: 5,
-    shadowColor: "#000",
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
+    // whisper shadow
+    shadowColor: NEAR_BLACK,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.07,
+    shadowOpacity: 0.05,
     shadowRadius: 6,
-    elevation: 3,
+    elevation: 2,
   },
   bubbleText: { fontSize: 15, lineHeight: 23 },
-  bubbleTextUser: { color: "#fff" },
-  bubbleTextBot: { color: "#1e293b" },
+  bubbleTextUser: { color: IVORY },
+  bubbleTextBot: { color: NEAR_BLACK },
   streamingDot: {
     width: 6, height: 6, borderRadius: 3,
-    backgroundColor: "#94a3b8",
+    backgroundColor: RING_WARM,
     alignSelf: "flex-end", marginTop: 4,
   },
-  timestamp: { fontSize: 10, color: "#94a3b8", marginLeft: 4 },
+  timestamp: { fontSize: 10, color: STONE_GRAY, marginLeft: 4 },
   timestampUser: { textAlign: "right", marginLeft: 0, marginRight: 4 },
 
   // ── Order links ──
   orderLinks: { gap: 7, marginTop: 2 },
   orderBtn: {
     flexDirection: "row", alignItems: "center",
-    backgroundColor: "#fff",
-    borderWidth: 1.5, borderColor: "#22c55e",
-    borderRadius: 14, padding: 10, gap: 10,
-    shadowColor: "#22c55e", shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1, shadowRadius: 6, elevation: 2,
+    backgroundColor: IVORY,
+    borderWidth: 1, borderColor: TERRACOTTA,
+    borderRadius: 12, padding: 10, gap: 10,
   },
-  orderBtnOff: { borderColor: "#e2e8f0", opacity: 0.6 },
+  orderBtnOff: { borderColor: BORDER_CREAM, opacity: 0.6 },
   orderBtnIconWrapper: {
     width: 34, height: 34, borderRadius: 10,
-    backgroundColor: "#f0fdf4",
+    backgroundColor: WARM_SAND,
     justifyContent: "center", alignItems: "center",
   },
-  orderBtnIconOff: { backgroundColor: "#f1f5f9" },
+  orderBtnIconOff: { backgroundColor: BORDER_CREAM },
   orderBtnIcon: { fontSize: 18 },
-  orderBtnTitle: { fontSize: 13, fontWeight: "700", color: "#15803d" },
-  orderBtnStore: { fontSize: 11, color: "#64748b", marginTop: 1 },
+  orderBtnTitle: { fontSize: 13, fontWeight: "700", color: TERRACOTTA },
+  orderBtnStore: { fontSize: 11, color: OLIVE_GRAY, marginTop: 1 },
   orderBtnArrowWrapper: {
     width: 28, height: 28, borderRadius: 14,
-    backgroundColor: "#22c55e",
+    backgroundColor: TERRACOTTA,
     justifyContent: "center", alignItems: "center",
   },
 
@@ -711,76 +695,75 @@ const styles = StyleSheet.create({
     paddingTop: 40, paddingHorizontal: 28, paddingBottom: 24,
   },
   emptyIconWrapper: {
-    width: 80, height: 80, borderRadius: 40,
-    backgroundColor: "#dcfce7",
+    width: 80, height: 80, borderRadius: 24,
+    backgroundColor: WARM_SAND,
     justifyContent: "center", alignItems: "center",
     marginBottom: 16,
-    shadowColor: "#22c55e", shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2, shadowRadius: 12, elevation: 4,
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
   },
   emptyIcon: { fontSize: 40 },
-  emptyTitle: {
-    fontSize: 20, fontWeight: "800", color: "#1e293b",
-    marginBottom: 8, textAlign: "center",
-  },
-  emptySub: {
-    fontSize: 14, color: "#64748b", textAlign: "center",
-    lineHeight: 22, marginBottom: 20,
-  },
+  emptyTitle: { fontSize: 20, fontWeight: "600", color: NEAR_BLACK, marginBottom: 8, textAlign: "center" },
+  emptySub: { fontSize: 14, color: OLIVE_GRAY, textAlign: "center", lineHeight: 22, marginBottom: 20 },
   storeChip: {
-    backgroundColor: "#f0fdf4", borderRadius: 22,
-    borderWidth: 1.5, borderColor: "#86efac",
-    paddingHorizontal: 16, paddingVertical: 8, marginBottom: 20,
+    backgroundColor: WARM_SAND,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
+    paddingHorizontal: 16, paddingVertical: 8,
+    marginBottom: 20,
   },
-  storeChipText: { fontSize: 13, color: "#15803d", fontWeight: "700" },
+  storeChipText: { fontSize: 13, color: TERRACOTTA, fontWeight: "600" },
   suggestionsScroll: { width: "100%" },
   suggChip: {
     flexDirection: "row", alignItems: "center", gap: 10,
-    backgroundColor: "#fff",
-    borderWidth: 1.5, borderColor: "#e2e8f0",
-    borderRadius: 14, paddingHorizontal: 16, paddingVertical: 13,
+    backgroundColor: IVORY,
+    borderWidth: 1, borderColor: BORDER_CREAM,
+    borderRadius: 12, paddingHorizontal: 16, paddingVertical: 13,
     marginBottom: 8,
-    shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04, shadowRadius: 4, elevation: 2,
   },
   suggIcon: { fontSize: 20 },
-  suggText: { flex: 1, color: "#334155", fontSize: 14, fontWeight: "600" },
+  suggText: { flex: 1, color: CHARCOAL_WARM, fontSize: 14, fontWeight: "600" },
 
-  // ── Scroll-to-bottom button ──
+  // ── Scroll-to-bottom ──
   scrollBtn: {
     position: "absolute",
-    bottom: 90,
-    right: 16,
+    bottom: 90, right: 16,
     width: 36, height: 36, borderRadius: 18,
-    backgroundColor: "#22c55e",
+    backgroundColor: TERRACOTTA,
     justifyContent: "center", alignItems: "center",
-    shadowColor: "#22c55e", shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
+    shadowColor: NEAR_BLACK,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
   },
 
-  // ── Input bar ──
+  // ── Input bar — Ivory ──
   inputBar: {
     flexDirection: "row", alignItems: "flex-end", gap: 10,
     paddingHorizontal: 14, paddingTop: 12,
-    backgroundColor: "#fff",
-    borderTopWidth: 1, borderTopColor: "#e2e8f0",
+    backgroundColor: IVORY,
+    borderTopWidth: 1, borderTopColor: BORDER_CREAM,
   },
   input: {
-    flex: 1, backgroundColor: "#f1f5f9",
-    borderRadius: 24, paddingHorizontal: 18, paddingVertical: 12,
-    fontSize: 15, color: "#1e293b", maxHeight: 130, lineHeight: 22,
-    borderWidth: 1.5, borderColor: "transparent",
+    flex: 1,
+    backgroundColor: PARCHMENT,
+    borderRadius: 24,
+    paddingHorizontal: 18, paddingVertical: 12,
+    fontSize: 15, color: NEAR_BLACK,
+    maxHeight: 130, lineHeight: 22,
+    borderWidth: 1, borderColor: BORDER_WARM,
   },
   sendBtn: {
     width: 48, height: 48, borderRadius: 24,
-    backgroundColor: "#22c55e",
+    backgroundColor: TERRACOTTA,
     justifyContent: "center", alignItems: "center",
-    shadowColor: "#22c55e", shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35, shadowRadius: 10, elevation: 6,
+    shadowColor: NEAR_BLACK,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
   },
-  sendBtnOff: {
-    backgroundColor: "#cbd5e1",
-    shadowOpacity: 0,
-    elevation: 0,
-  },
+  sendBtnOff: { backgroundColor: RING_WARM, shadowOpacity: 0, elevation: 0 },
 });

@@ -11,6 +11,13 @@ import ShoppingListScreen from "./screens/ShoppingListScreen";
 import StoreMapScreen from "./screens/StoreMapScreen";
 import OnboardingScreen, { PREFS_KEY, UserPreferences } from "./screens/OnboardingScreen";
 
+// Aloha from Pearl City! — Claude design tokens
+const IVORY = "#faf9f5";
+const TERRACOTTA = "#c96442";
+const STONE_GRAY = "#87867f";
+const NEAR_BLACK = "#141413";
+const BORDER_CREAM = "#f0eee6";
+
 const Tab = createBottomTabNavigator();
 
 function TabIcon({ name, focused }: { name: React.ComponentProps<typeof Ionicons>["name"]; focused: boolean }) {
@@ -18,7 +25,7 @@ function TabIcon({ name, focused }: { name: React.ComponentProps<typeof Ionicons
     <Ionicons
       name={focused ? name : (`${name}-outline` as React.ComponentProps<typeof Ionicons>["name"])}
       size={22}
-      color={focused ? "#22c55e" : "#94a3b8"}
+      color={focused ? TERRACOTTA : STONE_GRAY}
     />
   );
 }
@@ -37,7 +44,6 @@ export default function App() {
     });
   }, []);
 
-  // While checking storage, show nothing (or a splash)
   if (onboardingDone === null) return null;
 
   if (!onboardingDone) {
@@ -56,8 +62,8 @@ export default function App() {
         <Tab.Navigator
           screenOptions={{
             headerShown: false,
-            tabBarActiveTintColor: "#22c55e",
-            tabBarInactiveTintColor: "#94a3b8",
+            tabBarActiveTintColor: TERRACOTTA,
+            tabBarInactiveTintColor: STONE_GRAY,
             tabBarStyle: {
               position: "absolute",
               bottom: Platform.OS === "ios" ? 28 : 16,
@@ -65,15 +71,18 @@ export default function App() {
               right: 24,
               height: 64,
               borderRadius: 32,
-              backgroundColor: "#fff",
+              backgroundColor: IVORY,
               borderTopWidth: 0,
               paddingBottom: 0,
               paddingTop: 0,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.12,
-              shadowRadius: 24,
-              elevation: 16,
+              // ring-based shadow — no heavy drop shadow
+              shadowColor: NEAR_BLACK,
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0,
+              shadowRadius: 0,
+              elevation: 0,
+              borderWidth: 1,
+              borderColor: BORDER_CREAM,
             },
             tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginBottom: 6 },
             tabBarIconStyle: { marginTop: 6 },

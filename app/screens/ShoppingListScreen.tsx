@@ -6,11 +6,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatBar from "../components/ChatBar";
 import { StoreInfo } from "../services/api";
 
-interface ListItem {
-  id: string;
-  name: string;
-  checked: boolean;
-}
+// Aloha from Pearl City! — Claude design tokens
+const PARCHMENT    = "#f5f4ed";
+const IVORY        = "#faf9f5";
+const NEAR_BLACK   = "#141413";
+const DARK_SURFACE = "#30302e";
+const TERRACOTTA   = "#c96442";
+const OLIVE_GRAY   = "#5e5d59";
+const STONE_GRAY   = "#87867f";
+const BORDER_CREAM = "#f0eee6";
+const BORDER_WARM  = "#e8e6dc";
+const RING_WARM    = "#d1cfc5";
+const WARM_SAND    = "#e8e6dc";
+const CHARCOAL_WARM = "#4d4c48";
+const WARM_SILVER  = "#b0aea5";
+const ERROR_CRIMSON = "#b53333";
+
+interface ListItem { id: string; name: string; checked: boolean; }
 
 const STORAGE_KEY = "@timesave_list";
 const STORE_KEY = "@timesave_store";
@@ -74,8 +86,10 @@ export default function ShoppingListScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>📝 My List</Text>
-        <Text style={styles.headerSub}>{unchecked.length} items remaining</Text>
+        <Text style={styles.headerTitle}>My List</Text>
+        <Text style={styles.headerSub}>
+          {unchecked.length} item{unchecked.length !== 1 ? "s" : ""} remaining
+        </Text>
       </View>
 
       <View style={styles.addRow}>
@@ -84,7 +98,7 @@ export default function ShoppingListScreen() {
           value={newItem}
           onChangeText={setNewItem}
           placeholder="Add an item..."
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor={RING_WARM}
           returnKeyType="done"
           onSubmitEditing={addItem}
         />
@@ -118,7 +132,9 @@ export default function ShoppingListScreen() {
         )}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>📝</Text>
+            <View style={styles.emptyIconWrapper}>
+              <Text style={styles.emptyIcon}>📝</Text>
+            </View>
             <Text style={styles.emptyTitle}>Your list is empty</Text>
             <Text style={styles.emptySub}>Add items above, or ask the assistant below!</Text>
           </View>
@@ -128,11 +144,12 @@ export default function ShoppingListScreen() {
 
       {checked.length > 0 && (
         <TouchableOpacity style={styles.clearBtn} onPress={clearChecked}>
-          <Text style={styles.clearBtnText}>Clear {checked.length} checked item{checked.length > 1 ? "s" : ""}</Text>
+          <Text style={styles.clearBtnText}>
+            Clear {checked.length} checked item{checked.length > 1 ? "s" : ""}
+          </Text>
         </TouchableOpacity>
       )}
 
-      {/* Persistent chat bar */}
       <ChatBar
         storeInfo={storeInfo}
         placeholder={items.length > 0
@@ -144,57 +161,109 @@ export default function ShoppingListScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8fafc" },
+  container: { flex: 1, backgroundColor: PARCHMENT },
+
   header: {
-    backgroundColor: "#22c55e",
-    paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16,
+    backgroundColor: DARK_SURFACE,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 18,
   },
-  headerTitle: { fontSize: 24, fontWeight: "800", color: "#fff" },
-  headerSub: { fontSize: 14, color: "rgba(255,255,255,0.85)", marginTop: 2 },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "500",
+    color: IVORY,
+    letterSpacing: -0.3,
+  },
+  headerSub: { fontSize: 13, color: WARM_SILVER, marginTop: 3 },
+
   addRow: { flexDirection: "row", margin: 16, gap: 10 },
   addInput: {
-    flex: 1, backgroundColor: "#fff", borderRadius: 12,
-    paddingHorizontal: 16, paddingVertical: 12, fontSize: 15, color: "#1e293b",
-    borderWidth: 1, borderColor: "#e2e8f0",
-    shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
+    flex: 1,
+    backgroundColor: IVORY,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: NEAR_BLACK,
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
   },
   addBtn: {
-    width: 48, height: 48, borderRadius: 12, backgroundColor: "#22c55e",
-    justifyContent: "center", alignItems: "center",
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: TERRACOTTA,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  addBtnDisabled: { backgroundColor: "#94a3b8" },
-  addBtnText: { color: "#fff", fontSize: 28, fontWeight: "300", lineHeight: 32 },
+  addBtnDisabled: { backgroundColor: RING_WARM },
+  addBtnText: { color: IVORY, fontSize: 28, fontWeight: "300", lineHeight: 32 },
+
   listItem: {
-    flexDirection: "row", alignItems: "center",
-    backgroundColor: "#fff", marginHorizontal: 16, marginBottom: 8,
-    borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12,
-    borderWidth: 1, borderColor: "#e2e8f0",
-    shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04, shadowRadius: 3, elevation: 1, gap: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: IVORY,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
+    gap: 12,
   },
   listItemChecked: { opacity: 0.6 },
+
   checkbox: {
-    width: 24, height: 24, borderRadius: 6,
-    borderWidth: 2, borderColor: "#22c55e",
-    justifyContent: "center", alignItems: "center",
+    width: 24,
+    height: 24,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: TERRACOTTA,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  checkboxChecked: { backgroundColor: "#22c55e" },
-  checkmark: { color: "#fff", fontSize: 14, fontWeight: "700" },
-  itemName: { flex: 1, fontSize: 16, color: "#1e293b" },
-  itemNameChecked: { textDecorationLine: "line-through", color: "#94a3b8" },
+  checkboxChecked: { backgroundColor: TERRACOTTA },
+  checkmark: { color: IVORY, fontSize: 13, fontWeight: "700" },
+
+  itemName: { flex: 1, fontSize: 16, color: NEAR_BLACK },
+  itemNameChecked: { textDecorationLine: "line-through", color: STONE_GRAY },
+
   deleteBtn: {
-    width: 28, height: 28, borderRadius: 14,
-    backgroundColor: "#fee2e2", justifyContent: "center", alignItems: "center",
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    backgroundColor: BORDER_WARM,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  deleteBtnText: { color: "#ef4444", fontSize: 12, fontWeight: "700" },
+  deleteBtnText: { color: OLIVE_GRAY, fontSize: 12, fontWeight: "700" },
+
   emptyState: { flex: 1, alignItems: "center", justifyContent: "center", paddingVertical: 60 },
-  emptyIcon: { fontSize: 52, marginBottom: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: "700", color: "#1e293b", marginBottom: 6 },
-  emptySub: { fontSize: 14, color: "#64748b", textAlign: "center" },
-  clearBtn: {
-    margin: 16, padding: 14,
-    backgroundColor: "#fee2e2", borderRadius: 12, alignItems: "center",
+  emptyIconWrapper: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    backgroundColor: WARM_SAND,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
   },
-  clearBtnText: { color: "#ef4444", fontWeight: "600", fontSize: 14 },
+  emptyIcon: { fontSize: 36 },
+  emptyTitle: { fontSize: 20, fontWeight: "600", color: NEAR_BLACK, marginBottom: 6 },
+  emptySub: { fontSize: 14, color: OLIVE_GRAY, textAlign: "center", lineHeight: 22 },
+
+  clearBtn: {
+    margin: 16,
+    padding: 14,
+    backgroundColor: WARM_SAND,
+    borderRadius: 12,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
+  },
+  clearBtnText: { color: ERROR_CRIMSON, fontWeight: "600", fontSize: 14 },
 });

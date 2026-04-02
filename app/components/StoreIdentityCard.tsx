@@ -2,6 +2,18 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Linking } from "react-native";
 import { StoreInfo } from "../services/api";
 
+// Aloha from Pearl City! — Claude design tokens
+const IVORY        = "#faf9f5";
+const NEAR_BLACK   = "#141413";
+const TERRACOTTA   = "#c96442";
+const OLIVE_GRAY   = "#5e5d59";
+const STONE_GRAY   = "#87867f";
+const BORDER_CREAM = "#f0eee6";
+const BORDER_WARM  = "#e8e6dc";
+const WARM_SAND    = "#e8e6dc";
+const CHARCOAL_WARM = "#4d4c48";
+const ERROR_CRIMSON = "#b53333";
+
 interface Props {
   store: StoreInfo | null;
   loading?: boolean;
@@ -24,7 +36,9 @@ export default function StoreIdentityCard({ store, loading, onSelectStore }: Pro
   if (!store) {
     return (
       <TouchableOpacity style={[styles.card, styles.cardUnknown]} onPress={onSelectStore}>
-        <Text style={styles.unknownIcon}>🏪</Text>
+        <View style={styles.unknownIconWrapper}>
+          <Text style={styles.unknownIcon}>🏪</Text>
+        </View>
         <View style={styles.unknownText}>
           <Text style={styles.unknownTitle}>Which store are you in?</Text>
           <Text style={styles.unknownSub}>Tap to select your store for online ordering</Text>
@@ -35,9 +49,9 @@ export default function StoreIdentityCard({ store, loading, onSelectStore }: Pro
   }
 
   return (
-    <View style={[styles.card, styles.cardFound, { borderLeftColor: store.color ?? "#22c55e" }]}>
+    <View style={[styles.card, styles.cardFound, { borderLeftColor: TERRACOTTA }]}>
       <View style={styles.storeLeft}>
-        <View style={[styles.logoCircle, { backgroundColor: (store.color ?? "#22c55e") + "20" }]}>
+        <View style={styles.logoCircle}>
           <Text style={styles.logoEmoji}>{store.logo_emoji ?? "🏪"}</Text>
         </View>
         <View style={styles.storeText}>
@@ -46,8 +60,14 @@ export default function StoreIdentityCard({ store, loading, onSelectStore }: Pro
             <Text style={styles.storeAddress} numberOfLines={1}>{store.address}</Text>
           ) : null}
           <View style={styles.badges}>
-            <View style={[styles.badge, { backgroundColor: store.has_online_order ? "#dcfce7" : "#fee2e2" }]}>
-              <Text style={[styles.badgeText, { color: store.has_online_order ? "#15803d" : "#dc2626" }]}>
+            <View style={[
+              styles.badge,
+              { backgroundColor: store.has_online_order ? WARM_SAND : BORDER_CREAM }
+            ]}>
+              <Text style={[
+                styles.badgeText,
+                { color: store.has_online_order ? TERRACOTTA : ERROR_CRIMSON }
+              ]}>
                 {store.has_online_order ? "✓ Online ordering" : "✗ In-store only"}
               </Text>
             </View>
@@ -67,58 +87,69 @@ export default function StoreIdentityCard({ store, loading, onSelectStore }: Pro
 const styles = StyleSheet.create({
   card: {
     marginHorizontal: 16,
-    marginTop: 12,
-    borderRadius: 14,
+    marginTop: 14,
+    borderRadius: 12,
     padding: 14,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.07,
-    shadowRadius: 8,
-    elevation: 3,
+    backgroundColor: IVORY,
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
   },
   cardUnknown: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1.5,
-    borderColor: "#e2e8f0",
     borderStyle: "dashed",
+    borderColor: BORDER_WARM,
     gap: 12,
   },
   cardFound: {
     flexDirection: "row",
     alignItems: "center",
-    borderLeftWidth: 4,
+    borderLeftWidth: 3,
     justifyContent: "space-between",
   },
-  loadingText: { color: "#64748b", fontSize: 14, textAlign: "center" },
-  unknownIcon: { fontSize: 28 },
+  loadingText: { color: STONE_GRAY, fontSize: 14, textAlign: "center" },
+
+  unknownIconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: WARM_SAND,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  unknownIcon: { fontSize: 22 },
   unknownText: { flex: 1 },
-  unknownTitle: { fontSize: 15, fontWeight: "700", color: "#1e293b" },
-  unknownSub: { fontSize: 12, color: "#64748b", marginTop: 2 },
-  arrow: { fontSize: 22, color: "#94a3b8" },
+  unknownTitle: { fontSize: 15, fontWeight: "600", color: NEAR_BLACK },
+  unknownSub: { fontSize: 12, color: OLIVE_GRAY, marginTop: 2 },
+  arrow: { fontSize: 22, color: BORDER_WARM },
+
   storeLeft: { flexDirection: "row", alignItems: "center", gap: 12, flex: 1 },
   logoCircle: {
     width: 44,
     height: 44,
     borderRadius: 12,
+    backgroundColor: WARM_SAND,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
   },
   logoEmoji: { fontSize: 22 },
   storeText: { flex: 1 },
-  storeName: { fontSize: 16, fontWeight: "700", color: "#1e293b" },
-  storeAddress: { fontSize: 12, color: "#64748b", marginTop: 1 },
+  storeName: { fontSize: 15, fontWeight: "600", color: NEAR_BLACK },
+  storeAddress: { fontSize: 12, color: OLIVE_GRAY, marginTop: 1 },
   badges: { flexDirection: "row", marginTop: 5, gap: 6 },
   badge: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   badgeText: { fontSize: 11, fontWeight: "600" },
   webBtn: {
-    width: 38,
-    height: 38,
+    width: 36,
+    height: 36,
     borderRadius: 10,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: WARM_SAND,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
   },
-  webBtnText: { fontSize: 18 },
+  webBtnText: { fontSize: 16 },
 });

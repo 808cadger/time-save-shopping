@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Animated,
-  Platform,
+  View, Text, TouchableOpacity, ScrollView, StyleSheet, Animated, Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Aloha from Pearl City! — Claude design tokens
+const PARCHMENT    = "#f5f4ed";
+const IVORY        = "#faf9f5";
+const NEAR_BLACK   = "#141413";
+const DARK_SURFACE = "#30302e";
+const TERRACOTTA   = "#c96442";
+const OLIVE_GRAY   = "#5e5d59";
+const STONE_GRAY   = "#87867f";
+const BORDER_CREAM = "#f0eee6";
+const BORDER_WARM  = "#e8e6dc";
+const RING_WARM    = "#d1cfc5";
+const WARM_SAND    = "#e8e6dc";
+const WARM_SILVER  = "#b0aea5";
+const CHARCOAL_WARM = "#4d4c48";
 
 export interface UserPreferences {
   mode: "full_auto" | "manual" | "assisted";
@@ -52,8 +61,8 @@ const STEPS = [
         label: "Full Auto",
         desc: "App detects the store, opens automatically when you walk in, and guides you step-by-step with no tapping needed.",
         tag: "Hands-free",
-        tagColor: "#dcfce7",
-        tagText: "#15803d",
+        tagColor: WARM_SAND,
+        tagText: CHARCOAL_WARM,
       },
       {
         value: "assisted",
@@ -61,8 +70,8 @@ const STEPS = [
         label: "AI-Assisted",
         desc: "App suggests the next step and the AI chatbot is always ready. You stay in control and can ask anything.",
         tag: "Recommended",
-        tagColor: "#dbeafe",
-        tagText: "#1d4ed8",
+        tagColor: TERRACOTTA + "22",
+        tagText: TERRACOTTA,
       },
       {
         value: "manual",
@@ -70,8 +79,8 @@ const STEPS = [
         label: "Manual",
         desc: "Use the app on your own terms. The AI chatbot is available when you want it, but won't interrupt you.",
         tag: "DIY",
-        tagColor: "#f3f4f6",
-        tagText: "#374151",
+        tagColor: BORDER_CREAM,
+        tagText: OLIVE_GRAY,
       },
     ],
   },
@@ -101,8 +110,8 @@ const STEPS = [
         label: "Auto-detect via GPS",
         desc: "We use your location to identify the store chain and auto-load the map.",
         tag: "Recommended",
-        tagColor: "#dbeafe",
-        tagText: "#1d4ed8",
+        tagColor: TERRACOTTA + "22",
+        tagText: TERRACOTTA,
       },
       {
         value: "manual",
@@ -122,7 +131,7 @@ const STEPS = [
   },
   {
     id: "done",
-    title: "You're all set! 🎉",
+    title: "You're all set!",
     subtitle: "time~save~shopping is ready. Walk into any store and let's go.",
     type: "finish",
   },
@@ -163,9 +172,7 @@ export default function OnboardingScreen({ onComplete }: Props) {
       const val = prefs[currentStep.key as keyof UserPreferences];
       return Boolean(val);
     }
-    if (currentStep.type === "multi") {
-      return (prefs.features ?? []).length > 0;
-    }
+    if (currentStep.type === "multi") return (prefs.features ?? []).length > 0;
     return true;
   }
 
@@ -185,7 +192,9 @@ export default function OnboardingScreen({ onComplete }: Props) {
 
           {currentStep.type === "intro" && (
             <View style={styles.introIllustration}>
-              <Text style={styles.introEmoji}>🛒</Text>
+              <View style={styles.introEmojiWrapper}>
+                <Text style={styles.introEmoji}>🛒</Text>
+              </View>
               <View style={styles.introFeatures}>
                 {["📍 Detects your store automatically", "🗺️ Plans your route", "🛒 Links to order online", "💬 AI help on every screen"].map((f) => (
                   <View key={f} style={styles.introFeatureRow}>
@@ -198,12 +207,26 @@ export default function OnboardingScreen({ onComplete }: Props) {
 
           {currentStep.type === "finish" && (
             <View style={styles.finishContainer}>
-              <Text style={styles.finishEmoji}>🎉</Text>
-              <Text style={styles.finishSummary}>
-                Mode: <Text style={styles.bold}>{prefs.mode === "full_auto" ? "Full Auto" : prefs.mode === "assisted" ? "AI-Assisted" : "Manual"}</Text>
-                {"\n"}Detection: <Text style={styles.bold}>{prefs.storeDetection === "gps" ? "GPS auto-detect" : prefs.storeDetection === "manual" ? "Manual selection" : "QR scan"}</Text>
-                {"\n"}Features: <Text style={styles.bold}>{prefs.features.length} enabled</Text>
-              </Text>
+              <View style={styles.finishEmojiWrapper}>
+                <Text style={styles.finishEmoji}>🎉</Text>
+              </View>
+              <View style={styles.finishSummary}>
+                <Text style={styles.finishLine}>
+                  Mode:{" "}
+                  <Text style={styles.bold}>
+                    {prefs.mode === "full_auto" ? "Full Auto" : prefs.mode === "assisted" ? "AI-Assisted" : "Manual"}
+                  </Text>
+                </Text>
+                <Text style={styles.finishLine}>
+                  Detection:{" "}
+                  <Text style={styles.bold}>
+                    {prefs.storeDetection === "gps" ? "GPS auto-detect" : prefs.storeDetection === "manual" ? "Manual selection" : "QR scan"}
+                  </Text>
+                </Text>
+                <Text style={styles.finishLine}>
+                  Features: <Text style={styles.bold}>{prefs.features.length} enabled</Text>
+                </Text>
+              </View>
             </View>
           )}
 
@@ -220,7 +243,7 @@ export default function OnboardingScreen({ onComplete }: Props) {
                   >
                     <View style={styles.optionHeader}>
                       <Text style={styles.optionIcon}>{opt.icon}</Text>
-                      <Text style={styles.optionLabel}>{opt.label}</Text>
+                      <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>{opt.label}</Text>
                       {opt.tag && (
                         <View style={[styles.optionTag, { backgroundColor: opt.tagColor }]}>
                           <Text style={[styles.optionTagText, { color: opt.tagText }]}>{opt.tag}</Text>
@@ -248,7 +271,7 @@ export default function OnboardingScreen({ onComplete }: Props) {
                   >
                     <View style={styles.optionHeader}>
                       <Text style={styles.optionIcon}>{opt.icon}</Text>
-                      <Text style={styles.optionLabel}>{opt.label}</Text>
+                      <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>{opt.label}</Text>
                       {selected && <Text style={styles.checkmark}>✓</Text>}
                     </View>
                     <Text style={styles.optionDesc}>{opt.desc}</Text>
@@ -272,11 +295,8 @@ export default function OnboardingScreen({ onComplete }: Props) {
         <TouchableOpacity
           style={[styles.nextBtn, !canAdvance() && styles.nextBtnDisabled]}
           onPress={() => {
-            if (isLast) {
-              finish();
-            } else {
-              animateNext(() => setStep((s) => s + 1));
-            }
+            if (isLast) finish();
+            else animateNext(() => setStep((s) => s + 1));
           }}
           disabled={!canAdvance()}
         >
@@ -288,7 +308,8 @@ export default function OnboardingScreen({ onComplete }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8fafc" },
+  container: { flex: 1, backgroundColor: PARCHMENT },
+
   dots: {
     flexDirection: "row",
     justifyContent: "center",
@@ -296,90 +317,131 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 56 : 24,
     paddingBottom: 8,
   },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#e2e8f0" },
-  dotActive: { backgroundColor: "#22c55e", width: 20 },
-  dotDone: { backgroundColor: "#86efac" },
+  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: BORDER_WARM },
+  dotActive: { backgroundColor: TERRACOTTA, width: 22 },
+  dotDone: { backgroundColor: RING_WARM },
+
   content: { flex: 1 },
   scroll: { padding: 24, paddingTop: 8 },
-  title: { fontSize: 28, fontWeight: "800", color: "#1e293b", lineHeight: 36, marginBottom: 8 },
-  subtitle: { fontSize: 16, color: "#64748b", lineHeight: 24, marginBottom: 28 },
+
+  title: {
+    fontSize: 28,
+    fontWeight: "500",
+    color: NEAR_BLACK,
+    lineHeight: 36,
+    marginBottom: 8,
+    letterSpacing: -0.3,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: OLIVE_GRAY,
+    lineHeight: 26,
+    marginBottom: 28,
+  },
+
+  // Intro
   introIllustration: { alignItems: "center" },
-  introEmoji: { fontSize: 72, marginBottom: 24 },
+  introEmojiWrapper: {
+    width: 80,
+    height: 80,
+    borderRadius: 24,
+    backgroundColor: WARM_SAND,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
+  },
+  introEmoji: { fontSize: 40 },
   introFeatures: { width: "100%", gap: 10 },
   introFeatureRow: {
-    backgroundColor: "#fff",
+    backgroundColor: IVORY,
     borderRadius: 12,
     padding: 14,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: BORDER_CREAM,
   },
-  introFeatureText: { fontSize: 15, color: "#334155" },
+  introFeatureText: { fontSize: 15, color: CHARCOAL_WARM, lineHeight: 22 },
+
+  // Finish
   finishContainer: { alignItems: "center", gap: 16 },
-  finishEmoji: { fontSize: 72 },
-  finishSummary: {
-    fontSize: 16,
-    color: "#475569",
-    textAlign: "center",
-    lineHeight: 28,
-    backgroundColor: "#f0fdf4",
-    borderRadius: 14,
-    padding: 16,
+  finishEmojiWrapper: {
+    width: 80,
+    height: 80,
+    borderRadius: 24,
+    backgroundColor: WARM_SAND,
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: "#bbf7d0",
-    width: "100%",
+    borderColor: BORDER_WARM,
   },
-  bold: { fontWeight: "700", color: "#1e293b" },
+  finishEmoji: { fontSize: 40 },
+  finishSummary: {
+    width: "100%",
+    backgroundColor: IVORY,
+    borderRadius: 14,
+    padding: 18,
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
+    gap: 6,
+  },
+  finishLine: { fontSize: 15, color: OLIVE_GRAY, lineHeight: 24 },
+  bold: { fontWeight: "700", color: NEAR_BLACK },
+
+  // Option cards
   options: { gap: 12 },
   optionCard: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: IVORY,
+    borderRadius: 14,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: "#e2e8f0",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    borderColor: BORDER_CREAM,
   },
-  optionCardSelected: { borderColor: "#22c55e", backgroundColor: "#f0fdf4" },
+  optionCardSelected: {
+    borderColor: TERRACOTTA,
+    backgroundColor: WARM_SAND,
+  },
   optionHeader: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 6 },
   optionIcon: { fontSize: 22 },
-  optionLabel: { flex: 1, fontSize: 16, fontWeight: "700", color: "#1e293b" },
+  optionLabel: { flex: 1, fontSize: 16, fontWeight: "600", color: NEAR_BLACK },
+  optionLabelSelected: { color: TERRACOTTA },
   optionTag: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   optionTagText: { fontSize: 11, fontWeight: "700" },
-  checkmark: { fontSize: 18, color: "#22c55e", fontWeight: "800" },
-  optionDesc: { fontSize: 13, color: "#64748b", lineHeight: 19 },
+  checkmark: { fontSize: 18, color: TERRACOTTA, fontWeight: "700" },
+  optionDesc: { fontSize: 13, color: OLIVE_GRAY, lineHeight: 20 },
+
+  // Navigation
   nav: {
     flexDirection: "row",
     gap: 10,
     padding: 16,
     paddingBottom: Platform.OS === "ios" ? 32 : 16,
-    backgroundColor: "#fff",
+    backgroundColor: IVORY,
     borderTopWidth: 1,
-    borderTopColor: "#e2e8f0",
+    borderTopColor: BORDER_CREAM,
   },
   backBtn: {
     paddingHorizontal: 20,
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: BORDER_WARM,
     justifyContent: "center",
+    backgroundColor: WARM_SAND,
   },
-  backBtnText: { fontSize: 15, color: "#64748b", fontWeight: "600" },
+  backBtnText: { fontSize: 15, color: CHARCOAL_WARM, fontWeight: "600" },
   nextBtn: {
     flex: 1,
-    backgroundColor: "#22c55e",
-    borderRadius: 14,
+    backgroundColor: TERRACOTTA,
+    borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
-    shadowColor: "#22c55e",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    // ring shadow — no drop shadow
+    shadowColor: TERRACOTTA,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    elevation: 0,
   },
-  nextBtnDisabled: { backgroundColor: "#94a3b8", shadowOpacity: 0 },
-  nextBtnText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  nextBtnDisabled: { backgroundColor: RING_WARM, shadowOpacity: 0 },
+  nextBtnText: { color: IVORY, fontSize: 16, fontWeight: "600" },
 });

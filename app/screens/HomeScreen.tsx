@@ -11,7 +11,22 @@ import StoreIdentityCard from "../components/StoreIdentityCard";
 import ChatBar, { ChatBarRef } from "../components/ChatBar";
 import { PREFS_KEY, UserPreferences } from "./OnboardingScreen";
 
-// ── Store coordinates — update to your actual store ──
+// Aloha from Pearl City! — Claude design tokens
+const PARCHMENT   = "#f5f4ed";
+const IVORY       = "#faf9f5";
+const NEAR_BLACK  = "#141413";
+const DARK_SURFACE = "#30302e";
+const TERRACOTTA  = "#c96442";
+const CORAL       = "#d97757";
+const OLIVE_GRAY  = "#5e5d59";
+const STONE_GRAY  = "#87867f";
+const BORDER_CREAM = "#f0eee6";
+const BORDER_WARM = "#e8e6dc";
+const RING_WARM   = "#d1cfc5";
+const WARM_SAND   = "#e8e6dc";
+const CHARCOAL_WARM = "#4d4c48";
+
+// #ASSUMPTION: store coordinates are a placeholder — user updates to real store
 const STORE_LAT = 37.7749;
 const STORE_LNG = -122.4194;
 const GEOFENCE_RADIUS_METERS = 200;
@@ -64,12 +79,10 @@ export default function HomeScreen() {
   async function startLocationTracking() {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") return;
-
     try {
       const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
       handleLocation(loc.coords.latitude, loc.coords.longitude);
     } catch {}
-
     const subscription = await Location.watchPositionAsync(
       { accuracy: Location.Accuracy.Balanced, distanceInterval: 20 },
       (loc) => handleLocation(loc.coords.latitude, loc.coords.longitude)
@@ -81,7 +94,6 @@ export default function HomeScreen() {
     const dist = distanceMeters(lat, lng, STORE_LAT, STORE_LNG);
     const entered = dist <= GEOFENCE_RADIUS_METERS;
     setStoreEntered(entered);
-
     if (entered && !storeInfo) {
       setStoreLoading(true);
       try {
@@ -110,11 +122,11 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Hero */}
-        <View style={[styles.hero, { paddingTop: insets.top + 12 }]}>
-          <Text style={styles.heroIcon}>$</Text>
-          <Text style={styles.heroTitle}>time~save~shopping</Text>
-          <Text style={styles.heroSub}>Shop smarter. Save time.</Text>
+        {/* Hero — Near Black with warm editorial feel */}
+        <View style={[styles.hero, { paddingTop: insets.top + 16 }]}>
+          <Text style={styles.heroTag}>AI GROCERY ASSISTANT</Text>
+          <Text style={styles.heroTitle}>time~save{"\n"}~shopping</Text>
+          <Text style={styles.heroSub}>Walk in. Shop smarter. Get out.</Text>
           {prefs && (
             <View style={styles.modeChip}>
               <Text style={styles.modeChipText}>
@@ -154,14 +166,14 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         {/* Quick actions */}
-        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <Text style={styles.sectionLabel}>QUICK ACTIONS</Text>
         <View style={styles.actions}>
           {QUICK_ACTIONS.map((a) => (
             <TouchableOpacity
               key={a.label}
               style={styles.actionCard}
               onPress={() => chatBarRef.current?.openWithQuery(a.query)}
-              activeOpacity={0.75}
+              activeOpacity={0.78}
             >
               <Text style={styles.actionIcon}>{a.icon}</Text>
               <Text style={styles.actionLabel}>{a.label}</Text>
@@ -170,7 +182,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Supported chains */}
-        <Text style={styles.sectionTitle}>Supported Stores</Text>
+        <Text style={styles.sectionLabel}>SUPPORTED STORES</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chainsRow}>
           {Object.entries(chains).slice(0, 10).map(([key, chain]) => (
             <TouchableOpacity
@@ -179,7 +191,9 @@ export default function HomeScreen() {
               onPress={() => selectStore(key)}
             >
               <Text style={styles.chainEmoji}>{chain.logo_emoji}</Text>
-              <Text style={styles.chainName}>{chain.display_name}</Text>
+              <Text style={[styles.chainName, storeInfo?.chain_key === key && styles.chainNameActive]}>
+                {chain.display_name}
+              </Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -204,7 +218,7 @@ export default function HomeScreen() {
                 style={[styles.selectorItem, storeInfo?.chain_key === key && styles.selectorItemActive]}
                 onPress={() => selectStore(key)}
               >
-                <View style={[styles.selectorIcon, { backgroundColor: (chain.color ?? "#22c55e") + "20" }]}>
+                <View style={[styles.selectorIcon, { backgroundColor: WARM_SAND }]}>
                   <Text style={{ fontSize: 22 }}>{chain.logo_emoji}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
@@ -213,7 +227,9 @@ export default function HomeScreen() {
                     {chain.has_online_order ? "✓ Online ordering available" : "In-store only"}
                   </Text>
                 </View>
-                {storeInfo?.chain_key === key && <Text style={{ color: "#22c55e", fontSize: 20 }}>✓</Text>}
+                {storeInfo?.chain_key === key && (
+                  <Text style={{ color: TERRACOTTA, fontSize: 20 }}>✓</Text>
+                )}
               </TouchableOpacity>
             )}
             contentContainerStyle={{ padding: 16, gap: 8 }}
@@ -221,86 +237,167 @@ export default function HomeScreen() {
         </View>
       </Modal>
 
-      {/* Persistent chat bar at the bottom */}
       <ChatBar ref={chatBarRef} storeEntered={storeEntered} storeInfo={storeInfo} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8fafc" },
+  container: { flex: 1, backgroundColor: PARCHMENT },
   scroll: { paddingBottom: 8 },
+
+  // Hero — Near Black editorial section
   hero: {
-    alignItems: "center", paddingBottom: 16,
-    backgroundColor: "#22c55e", paddingHorizontal: 24,
+    backgroundColor: NEAR_BLACK,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    alignItems: "flex-start",
   },
-  heroIcon: {
-    fontSize: 44, marginBottom: 4, color: "rgba(255,255,255,0.92)",
-    fontWeight: "200", letterSpacing: -2, fontStyle: "italic",
+  heroTag: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: STONE_GRAY,
+    letterSpacing: 1.5,
+    marginBottom: 10,
   },
-  heroTitle: { fontSize: 21, fontWeight: "800", color: "#fff", letterSpacing: 1, marginBottom: 2 },
-  heroSub: { fontSize: 13, color: "rgba(255,255,255,0.85)", marginBottom: 8 },
+  heroTitle: {
+    fontSize: 38,
+    fontWeight: "500",
+    color: IVORY,
+    lineHeight: 44,
+    letterSpacing: -0.5,
+    marginBottom: 6,
+  },
+  heroSub: {
+    fontSize: 14,
+    color: STONE_GRAY,
+    marginBottom: 14,
+    lineHeight: 20,
+  },
   modeChip: {
-    backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 20,
-    paddingHorizontal: 14, paddingVertical: 5,
+    backgroundColor: DARK_SURFACE,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: "#3d3d3a",
   },
-  modeChipText: { color: "#fff", fontSize: 12, fontWeight: "600" },
+  modeChipText: { color: STONE_GRAY, fontSize: 12, fontWeight: "600" },
+
+  // Status card
   statusCard: {
-    flexDirection: "row", alignItems: "center",
-    marginHorizontal: 16, marginTop: 12,
-    borderRadius: 14, padding: 14, gap: 12,
-    shadowColor: "#000", shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06, shadowRadius: 6, elevation: 3,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 16,
+    marginTop: 14,
+    borderRadius: 12,
+    padding: 14,
+    gap: 12,
+    borderWidth: 1,
   },
-  statusActive: { backgroundColor: "#f0fdf4", borderWidth: 1.5, borderColor: "#86efac" },
-  statusIdle: { backgroundColor: "#fff", borderWidth: 1, borderColor: "#e2e8f0" },
-  statusIcon: { fontSize: 24 },
-  statusTitle: { fontSize: 13, fontWeight: "700", color: "#1e293b" },
-  statusSub: { fontSize: 11, color: "#64748b", marginTop: 1 },
+  statusActive: {
+    backgroundColor: IVORY,
+    borderColor: TERRACOTTA,
+  },
+  statusIdle: {
+    backgroundColor: IVORY,
+    borderColor: BORDER_CREAM,
+  },
+  statusIcon: { fontSize: 22 },
+  statusTitle: { fontSize: 13, fontWeight: "700", color: NEAR_BLACK },
+  statusSub: { fontSize: 11, color: OLIVE_GRAY, marginTop: 2 },
+
+  // Demo toggle
   demoBtn: {
-    marginHorizontal: 16, marginTop: 6,
-    paddingVertical: 8, paddingHorizontal: 14,
-    backgroundColor: "#f1f5f9", borderRadius: 10,
-    borderWidth: 1, borderColor: "#e2e8f0", alignItems: "center",
+    marginHorizontal: 16,
+    marginTop: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    backgroundColor: WARM_SAND,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: BORDER_WARM,
+    alignItems: "center",
   },
-  demoBtnText: { fontSize: 11, color: "#64748b" },
-  sectionTitle: {
-    fontSize: 14, fontWeight: "700", color: "#1e293b",
-    marginHorizontal: 16, marginTop: 14, marginBottom: 8,
+  demoBtnText: { fontSize: 11, color: CHARCOAL_WARM, fontWeight: "500" },
+
+  // Section labels — overline style
+  sectionLabel: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: STONE_GRAY,
+    letterSpacing: 1.5,
+    marginHorizontal: 16,
+    marginTop: 20,
+    marginBottom: 10,
   },
+
+  // Action cards
   actions: { flexDirection: "row", flexWrap: "wrap", paddingHorizontal: 12, gap: 8 },
   actionCard: {
-    width: "47%", backgroundColor: "#fff", borderRadius: 12, padding: 12,
-    alignItems: "center", borderWidth: 1, borderColor: "#e2e8f0",
-    shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04, shadowRadius: 4, elevation: 2,
+    width: "47%",
+    backgroundColor: IVORY,
+    borderRadius: 12,
+    padding: 14,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
+    // ring-level shadow
+    shadowColor: NEAR_BLACK,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 0,
+    elevation: 0,
   },
-  actionIcon: { fontSize: 22, marginBottom: 6 },
-  actionLabel: { fontSize: 12, fontWeight: "600", color: "#334155", textAlign: "center" },
+  actionIcon: { fontSize: 22, marginBottom: 7 },
+  actionLabel: { fontSize: 12, fontWeight: "600", color: CHARCOAL_WARM, textAlign: "center" },
+
+  // Store chains
   chainsRow: { paddingHorizontal: 16 },
   chainChip: {
-    flexDirection: "row", alignItems: "center", gap: 5,
-    backgroundColor: "#fff", borderRadius: 20, borderWidth: 1, borderColor: "#e2e8f0",
-    paddingHorizontal: 10, paddingVertical: 6, marginRight: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: IVORY,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    marginRight: 8,
   },
-  chainChipActive: { borderColor: "#22c55e", backgroundColor: "#f0fdf4" },
+  chainChipActive: { borderColor: TERRACOTTA, backgroundColor: WARM_SAND },
   chainEmoji: { fontSize: 15 },
-  chainName: { fontSize: 12, color: "#334155", fontWeight: "500" },
-  selectorModal: { flex: 1, backgroundColor: "#f8fafc" },
+  chainName: { fontSize: 12, color: CHARCOAL_WARM, fontWeight: "500" },
+  chainNameActive: { color: TERRACOTTA },
+
+  // Store selector modal
+  selectorModal: { flex: 1, backgroundColor: PARCHMENT },
   selectorHeader: {
-    flexDirection: "row", justifyContent: "space-between", alignItems: "center",
-    padding: 20, backgroundColor: "#22c55e",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: DARK_SURFACE,
     paddingTop: Platform.OS === "ios" ? 56 : 20,
   },
-  selectorTitle: { fontSize: 20, fontWeight: "800", color: "#fff" },
-  selectorClose: { color: "#fff", fontSize: 20, fontWeight: "600" },
+  selectorTitle: { fontSize: 20, fontWeight: "700", color: IVORY },
+  selectorClose: { color: STONE_GRAY, fontSize: 20, fontWeight: "600" },
   selectorItem: {
-    flexDirection: "row", alignItems: "center", gap: 14,
-    backgroundColor: "#fff", borderRadius: 14, padding: 14,
-    borderWidth: 1, borderColor: "#e2e8f0",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+    backgroundColor: IVORY,
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: BORDER_CREAM,
   },
-  selectorItemActive: { borderColor: "#22c55e", backgroundColor: "#f0fdf4" },
-  selectorIcon: { width: 44, height: 44, borderRadius: 12, justifyContent: "center", alignItems: "center" },
-  selectorName: { fontSize: 15, fontWeight: "700", color: "#1e293b" },
-  selectorOnline: { fontSize: 12, color: "#64748b", marginTop: 2 },
+  selectorItemActive: { borderColor: TERRACOTTA, backgroundColor: WARM_SAND },
+  selectorIcon: {
+    width: 44, height: 44, borderRadius: 12,
+    justifyContent: "center", alignItems: "center",
+  },
+  selectorName: { fontSize: 15, fontWeight: "700", color: NEAR_BLACK },
+  selectorOnline: { fontSize: 12, color: OLIVE_GRAY, marginTop: 2 },
 });
