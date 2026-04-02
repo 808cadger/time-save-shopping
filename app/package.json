@@ -37,5 +37,9 @@
     "@types/react": "~18.2.79",
     "typescript": "~5.3.3"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "@xmldom/xmldom": "^0.8.12",
+    "tar": "^7.5.11"
+  }
 }
