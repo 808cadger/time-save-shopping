@@ -12,11 +12,11 @@ import StoreMapScreen from "./screens/StoreMapScreen";
 import OnboardingScreen, { PREFS_KEY, UserPreferences } from "./screens/OnboardingScreen";
 
 // Aloha from Pearl City! — Claude design tokens
-const IVORY = "#faf9f5";
-const TERRACOTTA = "#c96442";
+const IVORY = "#fffdf7";
+const TERRACOTTA = "#e05f3f";
 const STONE_GRAY = "#87867f";
-const NEAR_BLACK = "#141413";
-const BORDER_CREAM = "#f0eee6";
+const NEAR_BLACK = "#111827";
+const BORDER_CREAM = "#e8dfd2";
 
 const Tab = createBottomTabNavigator();
 
@@ -66,21 +66,21 @@ export default function App() {
             tabBarInactiveTintColor: STONE_GRAY,
             tabBarStyle: {
               position: "absolute",
-              bottom: Platform.OS === "ios" ? 28 : 16,
-              left: 24,
-              right: 24,
-              height: 64,
-              borderRadius: 32,
+              bottom: Platform.OS === "ios" ? 28 : 18,
+              left: 18,
+              right: 18,
+              height: 66,
+              borderRadius: 26,
               backgroundColor: IVORY,
               borderTopWidth: 0,
               paddingBottom: 0,
               paddingTop: 0,
               // ring-based shadow — no heavy drop shadow
               shadowColor: NEAR_BLACK,
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0,
-              shadowRadius: 0,
-              elevation: 0,
+              shadowOffset: { width: 0, height: 12 },
+              shadowOpacity: 0.16,
+              shadowRadius: 28,
+              elevation: 14,
               borderWidth: 1,
               borderColor: BORDER_CREAM,
             },
