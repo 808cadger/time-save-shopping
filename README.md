@@ -1,5 +1,53 @@
 # time~save~shopping
 
+<!-- INSTALL-START -->
+## Install and run
+
+These instructions install and run `time-save-shopping` from a fresh clone.
+
+### Clone
+```bash
+git clone https://github.com/808cadger/time-save-shopping.git
+cd time-save-shopping
+```
+
+### Expo app
+```bash
+cd app
+npm install
+npm start
+npm run web
+```
+
+### Expo Android build
+```bash
+cd app
+npm run android
+npm run build:android
+```
+
+### Python/API service
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+### Notes
+- Expo apps require the Expo/React Native local prerequisites for native Android builds.
+- Create any required `.env` file from `.env.example` before starting backend services.
+
+### AI/API setup
+- If the app has AI features, add the required provider key in the app settings or local `.env` file.
+- Browser-only apps store user-provided API keys on the local device unless a backend endpoint is configured.
+
+### License
+- Apache License 2.0. See [`LICENSE`](./LICENSE).
+<!-- INSTALL-END -->
+
+
 > AI grocery assistant — detects when you walk into the store, guides you to every item on your list, and puts an AI chatbot on every screen.
 
 [**Download APK →**](https://codeberg.org/cadger808/time-save-shopping/releases) · [Codeberg](https://codeberg.org/cadger808/time-save-shopping)
