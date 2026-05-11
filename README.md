@@ -1,5 +1,12 @@
 # time~save~shopping
 
+## Download Links
+
+- **iOS / iPhone:** Open the PWA in Safari: [time~save~shopping iOS install](https://808cadger.github.io/time-save-shopping/) and choose **Share -> Add to Home Screen**.
+- **Android:** Download the latest APK from GitHub Releases: [time~save~shopping Android releases](https://github.com/808cadger/time-save-shopping/releases/latest).
+- **Source download:** [Download the GitHub source ZIP](https://github.com/808cadger/time-save-shopping/archive/refs/heads/main.zip).
+
+
 <!-- INSTALL-START -->
 ## Install and run
 
