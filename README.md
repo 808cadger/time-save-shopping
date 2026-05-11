@@ -1,10 +1,35 @@
 # time~save~shopping
 
+[![Release](https://img.shields.io/github/v/release/808cadger/time-save-shopping?include_prereleases&label=release)](https://github.com/808cadger/time-save-shopping/releases)
+[![Last commit](https://img.shields.io/github/last-commit/808cadger/time-save-shopping)](https://github.com/808cadger/time-save-shopping/commits)
+[![License](https://img.shields.io/github/license/808cadger/time-save-shopping)](https://github.com/808cadger/time-save-shopping/blob/HEAD/LICENSE)
+![Platforms](https://img.shields.io/badge/platform-Expo%2FReact%20Native%2C%20Android%2C%20Web%2C%20API%20service-2563eb)
+
+AI grocery assistant with store detection, list guidance, item finding, and mobile shopping workflows.
+
+## Project Snapshot
+
+| Area | Details |
+|------|---------|
+| Primary use case | AI grocery assistant with store detection, list guidance, item finding, and mobile shopping workflows. |
+| Platforms | Expo/React Native, Android, Web, API service |
+| Core stack | Expo, React Native, Android, FastAPI, Claude AI |
+| Review first | `app`, `backend` |
+
 ## Download Links
 
-- **iOS / iPhone:** Open the PWA in Safari: [time~save~shopping iOS install](https://808cadger.github.io/time-save-shopping/) and choose **Share -> Add to Home Screen**.
-- **Android:** Download the latest APK from GitHub Releases: [time~save~shopping Android releases](https://github.com/808cadger/time-save-shopping/releases/latest).
-- **Source download:** [Download the GitHub source ZIP](https://github.com/808cadger/time-save-shopping/archive/refs/heads/main.zip).
+| Platform | Link |
+|----------|------|
+| iOS / iPhone | [Open the PWA in Safari](https://808cadger.github.io/time-save-shopping/) and choose **Share -> Add to Home Screen** |
+| Android | [Download the latest APK from GitHub Releases](https://github.com/808cadger/time-save-shopping/releases/latest) |
+| Source | [Download the GitHub source ZIP](https://github.com/808cadger/time-save-shopping/archive/refs/heads/main.zip) |
+| Repository | [View on GitHub](https://github.com/808cadger/time-save-shopping) |
+
+## Why This Repo Is Worth Reviewing
+
+- In-store mobile UX centers around location and list context.
+- React Native app plus backend service supports real device workflows.
+- AI assistant is integrated into shopping instead of living as a separate chat.
 
 
 <!-- INSTALL-START -->
