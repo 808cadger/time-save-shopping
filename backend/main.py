@@ -509,7 +509,7 @@ async def stream_chat(
 
     while True:
         response = await client.messages.create(
-            model="claude-opus-4-6",
+            model="claude-opus-4-8",
             max_tokens=2048,
             system=system,
             tools=all_tools,
